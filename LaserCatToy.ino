@@ -32,6 +32,11 @@ void sanity_check(int sec_hold = 3);
 void idle_pos();
 int angle_diff = 10;
 int start_tic;
+
+uint8_t fsp_v=BASE_FIRST_LINK_SERVO_POS;
+uint8_t ssp=BASE_SECOND_LINK_SERVO_POS;
+#define ANGLE_BIAS 15
+
 void setup() {
   Serial.begin(9600);
   pinMode(LASER_PIN, OUTPUT);
@@ -77,8 +82,21 @@ void loop() {
   if ((seconds() - start_tic) < THREE_MIN) {
 
 
-    uint8_t fsp = random(MIN_FIRST_LINK_SERVO_POS, MAX_FIRST_LINK_SERVO_POS);     // set the first servo to a random position
-    uint8_t ssp = random(MIN_SECOND_LINK_SERVO_POS, MAX_SECOND_LINK_SERVO_POS);   // set the second servo to a random position
+    //uint8_t fsp = random(MIN_FIRST_LINK_SERVO_POS, MAX_FIRST_LINK_SERVO_POS);     // set the first servo to a random position
+    //uint8_t ssp = random(MIN_SECOND_LINK_SERVO_POS, MAX_SECOND_LINK_SERVO_POS);   // set the second servo to a random position
+
+
+    // relative movement for close changes
+    uint8_t fsp = random(fsp-ANGLE_BIAS, fsp+ANGLE_BIAS);     // set the first servo to a random position
+    uint8_t ssp = random(ssp-ANGLE_BIAS, ssp+ANGLE_BIAS);   // set the second servo to a random positio
+
+    // top and bottom limits
+    if (fsp<MIN_FIRST_LINK_SERVO_POS) fsp=MIN_FIRST_LINK_SERVO_POS;
+    else if (fsp>MAX_FIRST_LINK_SERVO_POS) fsp=MAX_FIRST_LINK_SERVO_POS;
+    
+    if (ssp<MIN_SECOND_LINK_SERVO_POS) ssp=MIN_SECOND_LINK_SERVO_POS;
+    else if (ssp>MAX_SECOND_LINK_SERVO_POS) ssp=MAX_SECOND_LINK_SERVO_POS;
+    
     slowSetServosPos(fsp, ssp, 100, SERVO_DELAY);   // slow change of servo positions (blocking)
     delay(rand_delay());
 
@@ -118,7 +136,7 @@ void slowSetServosPos(uint8_t flsPos, uint8_t slsPos, uint8_t steps, uint8_t dt)
   static uint8_t slsLastPos = BASE_SECOND_LINK_SERVO_POS;   //
   Serial.print("first servo:  "); Serial.print(flsLastPos +  (flsPos - flsLastPos));
   Serial.print("    second servo:  "); Serial.println(slsLastPos + (slsPos - slsLastPos));
-  angle_diff = sqrt(pow((flsPos - flsLastPos),2)+pow((slsPos - slsLastPos),2));
+  angle_diff = sqrt(pow((flsPos - flsLastPos), 2) + pow((slsPos - slsLastPos), 2));
   for (uint8_t i = 0; i < steps; i++) {     //  add each step a little to the current positions
     firstLinkServo.write(flsLastPos + i * (flsPos - flsLastPos) / steps);
 
