@@ -24,7 +24,7 @@
 #define LASER_BRIGHTNESS  200 // яlaser brightness
 #define SERVO_DELAY       6
 #define seconds() (millis()/1000)
-#define THREE_MIN 3*60
+#define FOUR 4*60
 bool laser_on;
 Servo firstLinkServo;   // first link servo
 Servo secondLinkServo;  // second link servo
@@ -73,13 +73,13 @@ void setup() {
 
 void loop() {
   EVERY_N_SECONDS(10) {
-    int tic_tac = THREE_MIN - (seconds() - start_tic);
+    int tic_tac = FOUR - (seconds() - start_tic);
     if (tic_tac >= 0) {
       Serial.print(tic_tac);
       Serial.println("  left");
     }
   }
-  if ((seconds() - start_tic) < THREE_MIN) {
+  if ((seconds() - start_tic) < FOUR) {
 
 
     //uint8_t fsp = random(MIN_FIRST_LINK_SERVO_POS, MAX_FIRST_LINK_SERVO_POS);     // set the first servo to a random position
@@ -101,7 +101,7 @@ void loop() {
     delay(rand_delay());
 
   }
-  if (((seconds() - start_tic) > THREE_MIN) &&  laser_on) {
+  if (((seconds() - start_tic) > FOUR) &&  laser_on) {
     analogWrite(LASER_PIN, 0);  // shut the laser
     laser_on = false;
     idle_pos();
