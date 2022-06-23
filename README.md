@@ -16,7 +16,7 @@ Automatic laser pointer toy for cats using arduino
 
  - Arduino nano
  - 2x SG90 Micro Servo
- - Pan & tilt brackets
+ - Pan & tilt brackets [print](https://www.thingiverse.com/thing:2800192) or [buy](https://www.aliexpress.com/item/32972422501.html)
  - 5V laser module
  - 2x Ginger cats
 </br></br></br></br>
